@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/21 15:47:32 by abdazero          #+#    #+#             */
+/*   Updated: 2025/11/21 15:47:47 by abdazero         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
@@ -9,7 +21,6 @@
 # endif
 
 # if BUFFER_SIZE < 1
-#  error "BUFFER_SIZE must be at least 1"
 # endif
 
 char	*get_next_line(int fd);

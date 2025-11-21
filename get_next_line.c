@@ -1,51 +1,86 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/21 15:47:24 by abdazero          #+#    #+#             */
+/*   Updated: 2025/11/21 16:08:10 by abdazero         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
-char *get_next_line(int fd)
+char	*ft_gnl_strchr(const char *s, int c)
 {
-	static char *stash = NULL;
-	char *buffer;
-	char *line;
-	ssize_t bytes_read;
+	size_t	i;
 
-	// Input validation
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (!s)
 		return (NULL);
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == (char)c)
+			return ((char *)(s + i));
+		i++;
+	}
+	if (c == '\0')
+		return ((char *)(s + i));
+	return (NULL);
+}
 
-	// Allocate buffer on heap, not stack
+static char	*ft_read_chunk(int fd, char *stash)
+{
+	char	*buffer;
+	ssize_t	bytes_read;
+	char	*tmp;
+
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
 		return (NULL);
-
-	// Read until we find a newline or EOF
-	while (!ft_gnl_strchr(stash, '\n'))
+	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	if (bytes_read <= 0)
 	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read < 0)
-		{
-			free(buffer);
-			free(stash);
-			stash = NULL;
-			return (NULL);
-		}
-		if (bytes_read == 0)
-			break;
-		buffer[bytes_read] = '\0';
-		char *tmp = ft_gnl_strjoin(stash, buffer);
-		free(stash);
-		if (!tmp)
-		{
-			free(buffer);
-			return (NULL);
-		}
-		stash = tmp;
+		free(buffer);
+		return (stash);
 	}
-
+	buffer[bytes_read] = '\0';
+	tmp = ft_gnl_strjoin(stash, buffer);
+	free(stash);
 	free(buffer);
+	return (tmp);
+}
 
-	// Extract and return the line
+static char	*ft_read_fd(int fd, char *stash)
+{
+	ssize_t	bytes_read;
+
+	bytes_read = 1;
+	while (!ft_gnl_strchr(stash, '\n') && bytes_read > 0)
+	{
+		stash = ft_read_chunk(fd, stash);
+		if (!stash)
+			return (NULL);
+		if (!ft_gnl_strchr(stash, '\n'))
+			bytes_read = 1;
+		else
+			bytes_read = 0;
+	}
+	return (stash);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*stash;
+	char		*line;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	stash = ft_read_fd(fd, stash);
+	if (!stash)
+		return (NULL);
 	line = ft_extract_line(stash);
-	char *new_stash = ft_extract_remainder(stash);
-	stash = new_stash;
-
+	stash = ft_extract_remainder(stash);
 	return (line);
 }
