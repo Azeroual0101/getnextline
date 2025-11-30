@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/29 21:50:29 by abdazero          #+#    #+#             */
+/*   Updated: 2025/11/29 21:54:29 by abdazero         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
-static char *read_into_stash(int fd, char *stash)
+static char	*read_into_stash(int fd, char *stash)
 {
 	ssize_t	bytes_read;
 	char	*buffer;
@@ -27,7 +39,7 @@ static char *read_into_stash(int fd, char *stash)
 	return (stash);
 }
 
-static char *extract_line(char *stash)
+static char	*extract_line(char *stash)
 {
 	size_t	i;
 	char	*line;
@@ -45,7 +57,7 @@ static char *extract_line(char *stash)
 	return (line);
 }
 
-static char *update_stash(char *stash)
+static char	*update_stash(char *stash)
 {
 	size_t	i;
 	size_t	j;
@@ -72,7 +84,7 @@ static char *update_stash(char *stash)
 	return (new_stash);
 }
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
 	static char	*stash;
 	char		*line;

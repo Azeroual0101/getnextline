@@ -1,101 +1,113 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/29 21:50:25 by abdazero          #+#    #+#             */
+/*   Updated: 2025/11/29 21:53:41 by abdazero         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 size_t	ft_gnl_strlen(const char *str)
 {
-	size_t	len;
+	size_t	length;
 
 	if (!str)
 		return (0);
-	len = 0;
-	while (str[len])
-		len++;
-	return (len);
+	length = 0;
+	while (str[length])
+		length++;
+	return (length);
 }
 
 char	*ft_gnl_strchr(const char *str, int c)
 {
-	unsigned char	ch;
+	unsigned char	target;
 
 	if (!str)
 		return (NULL);
-	ch = (unsigned char)c;
+	target = (unsigned char)c;
 	while (*str)
 	{
-		if (*str == ch)
+		if (*str == target)
 			return ((char *)str);
 		str++;
 	}
-	if (*str == ch)
+	if (*str == target)
 		return ((char *)str);
 	return (NULL);
 }
 
-char	*ft_gnl_strjoin(char *s1, char *s2)
+char	*ft_gnl_strjoin(char *first, char *second)
 {
-	char	*joined;
-	int		i;
-	int		j;
+	char	*buffer;
+	int		index_a;
+	int		index_b;
 
-	if (!s1 || !s2)
+	if (!first || !second)
 		return (NULL);
-	joined = malloc(sizeof(char) * (ft_gnl_strlen(s1) + ft_gnl_strlen(s2) + 1));
-	if (!joined)
+	buffer = malloc((ft_gnl_strlen(first) + ft_gnl_strlen(second) + 1));
+	if (!buffer)
 		return (NULL);
-	i = 0;
-	j = 0;
-	while (s1[i])
-		joined[j++] = s1[i++];
-	i = 0;
-	while (s2[i])
-		joined[j++] = s2[i++];
-	joined[j] = '\0';
-	free(s1);
-	return (joined);
+	index_a = 0;
+	index_b = 0;
+	while (first[index_a])
+		buffer[index_b++] = first[index_a++];
+	index_a = 0;
+	while (second[index_a])
+		buffer[index_b++] = second[index_a++];
+	buffer[index_b] = '\0';
+	free(first);
+	return (buffer);
 }
 
-char	*ft_gnl_strdup(const char *src)
+char	*ft_gnl_strdup(const char *source)
 {
-	char	*res;
-	int		i;
+	char	*copy;
+	int		idx;
 
-	i = 0;
-	if (!src)
+	idx = 0;
+	if (!source)
 		return (NULL);
-	res = (char *)malloc ((ft_gnl_strlen(src) + 1) * sizeof(char));
-	if (!res)
+	copy = (char *)malloc ((ft_gnl_strlen(source) + 1) * sizeof(char));
+	if (!copy)
 		return (NULL);
-	while (src[i])
+	while (source[idx])
 	{
-		res[i] = src[i];
-		i++;
+		copy[idx] = source[idx];
+		idx++;
 	}
-	res[i] = '\0';
-	return (res);
+	copy[idx] = '\0';
+	return (copy);
 }
 
-char	*ft_gnl_substr(const char *str, unsigned int start, size_t len)
+char	*ft_gnl_substr(const char *str, unsigned int start, size_t length)
 {
-	char	*substr;
-	size_t	i;
-	size_t	avail_len;
+	char		*slice;
+	size_t		pos;
+	size_t		remain_len;
 
 	if (!str)
 		return (NULL);
 	if (start >= ft_gnl_strlen(str))
 		return (ft_gnl_strdup(""));
-	avail_len = ft_gnl_strlen(str + start);
-	if (avail_len < len)
-		substr = malloc(sizeof(char) * (avail_len + 1));
+	remain_len = ft_gnl_strlen(str + start);
+	if (remain_len < length)
+		slice = malloc(sizeof(char) * (remain_len + 1));
 	else
-		substr = malloc(sizeof(char) * (len + 1));
-	if (!substr)
+		slice = malloc(sizeof(char) * (length + 1));
+	if (!slice)
 		return (NULL);
-	i = 0;
-	while (i < len && str[start + i])
+	pos = 0;
+	while (pos < length && str[start + pos])
 	{
-		substr[i] = str[start + i];
-		i++;
+		slice[pos] = str[start + pos];
+		pos++;
 	}
-	substr[i] = '\0';
-	return (substr);
+	slice[pos] = '\0';
+	return (slice);
 }
