@@ -6,7 +6,7 @@
 /*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 21:50:29 by abdazero          #+#    #+#             */
-/*   Updated: 2025/11/29 21:54:29 by abdazero         ###   ########.fr       */
+/*   Updated: 2025/12/04 22:06:26 by abdazero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static char	*init_stash(char *stash, char **buffer)
 {
-	*buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	*buffer = malloc((size_t)BUFFER_SIZE + 1);
 	if (!*buffer)
 		return (free(stash), NULL);
 	if (!stash)
@@ -88,8 +88,6 @@ static char	*update_stash(char *stash)
 	}
 	new_stash = ft_gnl_strdup(stash + i);
 	free(stash);
-	if (!new_stash)
-		return (NULL);
 	return (new_stash);
 }
 
@@ -98,8 +96,7 @@ char	*get_next_line(int fd)
 	static char	*stash;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0
-		|| BUFFER_SIZE > INT_MAX)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 	{
 		free(stash);
 		stash = NULL;
